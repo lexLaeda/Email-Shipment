@@ -7,14 +7,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Employee {
-    private Person person;
+public class Employee extends Person{
     private List<JobHistoryEntry> jobHistory;
     private EmployeeType employeeType;
     private Speciality specialty;
@@ -22,4 +22,6 @@ public class Employee {
     private BigDecimal salary;
     private String buildingPlot;
     private boolean isDismissed;
+    private LocalDate entryDate;
+    private LocalDate exitDate;
 }

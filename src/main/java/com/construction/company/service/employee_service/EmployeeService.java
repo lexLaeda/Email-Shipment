@@ -22,4 +22,5 @@ public interface EmployeeService {
     List<Employee> findAllBySex(Sex sex);
     List<Employee> findAllByDepartment(Department department);
     List<Employee> findAllByBuildingPlot(String buildingPlot);
+    List<Employee> findAllBirthDayMen();
 }

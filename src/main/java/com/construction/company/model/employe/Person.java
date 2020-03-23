@@ -20,6 +20,5 @@ public class Person {
     private int age;
     private Sex sex;
     private LocalDate birthDate;
-    private LocalDate entryDate;
-    private LocalDate exitDate;
+
 }
