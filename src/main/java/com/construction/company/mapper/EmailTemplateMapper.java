@@ -1,13 +1,18 @@
-package com.construction.company.model.template;
+package com.construction.company.mapper;
 
+import com.construction.company.model.template.EmailTemplate;
+import com.construction.company.model.template.EmailTemplateDTO;
+import com.construction.company.model.template.ImageTemplate;
+import com.construction.company.model.template.ImageTemplateDTO;
 import org.thymeleaf.context.Context;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class EmailTEmplateMapper implements Mapper<EmailTemplate,EmailTemplateDTO> {
+public class EmailTemplateMapper implements Mapper<EmailTemplate, EmailTemplateDTO> {
+    private ImageTemplateMapper mapper = new ImageTemplateMapper();
+
     @Override
     public EmailTemplate fromDTO(EmailTemplateDTO dto) {
         Context context = new Context();
@@ -20,7 +25,9 @@ public class EmailTEmplateMapper implements Mapper<EmailTemplate,EmailTemplateDT
                 .reason(dto.getReason())
                 .locale(dto.getLocale())
                 .context(context)
-                .pathToImages(dto.getPathToImages())
+                .imageTemplates(dto.getImageTemplateDTOList().stream()
+                        .map(this::getImageTemplate)
+                        .collect(Collectors.toList()))
                 .build();
     }
 
@@ -35,13 +42,23 @@ public class EmailTEmplateMapper implements Mapper<EmailTemplate,EmailTemplateDT
                 .reason(emailTemplate.getReason())
                 .locale(emailTemplate.getLocale())
                 .variables(variables)
-                .pathToImages(emailTemplate.getPathToImages())
+                .imageTemplateDTOList(emailTemplate.getImageTemplates().stream()
+                        .map(this::getImageTemplateDTO)
+                        .collect(Collectors.toList()))
                 .build();
 
     }
 
-    private Map<String, Object> getVariables(Context context){
+    private Map<String, Object> getVariables(Context context) {
         Set<String> variablesNames = context.getVariableNames();
-        return variablesNames.stream().collect(Collectors.toMap(variableName->variableName, context::getVariable));
+        return variablesNames.stream().collect(Collectors.toMap(variableName -> variableName, context::getVariable));
+    }
+
+    private ImageTemplate getImageTemplate(ImageTemplateDTO dto) {
+        return mapper.fromDTO(dto);
+    }
+
+    private ImageTemplateDTO getImageTemplateDTO(ImageTemplate imageTemplate) {
+        return mapper.toDTO(imageTemplate);
     }
 }

@@ -1,8 +1,10 @@
 package com.construction.company.service.message_service;
 
-import com.construction.company.model.employe.Person;
+import com.construction.company.model.person.Person;
 import com.construction.company.model.template.EmailTemplate;
+import com.construction.company.model.template.ImageTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -10,9 +12,8 @@ import org.thymeleaf.TemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.io.*;
+import java.io.File;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,13 +21,13 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     private JavaMailSenderImpl mailSender;
 
-    //TODO: config
+    @Autowired
     private TemplateEngine htmlTemplateEngine;
 
     @Override
     public <T extends Person> List<MimeMessage> createMimeMessages(EmailTemplate template, List<T> personList) {
         return personList.stream()
-                .map(person->createMimeMessage(template,person))
+                .map(person -> createMimeMessage(template, person))
                 .collect(Collectors.toList());
     }
 
@@ -34,12 +35,12 @@ public class MessageServiceImpl implements MessageService {
     public <T extends Person> MimeMessage createMimeMessage(EmailTemplate template, T person) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         try {
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage,true,"UTF-8");
-            mimeMessageHelper.setSubject(template.getSubject());
-            mimeMessageHelper.setTo(person.getContact().getEmail());
-            String htmlContent = htmlTemplateEngine.process(template.getPathTo(),template.getContext());
-            mimeMessageHelper.setText(htmlContent,true);
-            fillMessageHelperWithImages(mimeMessageHelper,template.getPathToImages());
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            helper.setSubject(template.getSubject());
+            helper.setTo(person.getContact().getEmail());
+            String htmlContent = htmlTemplateEngine.process(template.getPathTo(), template.getContext());
+            helper.setText(htmlContent, true);
+            fillMessageHelperWithImages(helper, template.getImageTemplates());
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -47,27 +48,44 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public <T extends Person> List<MimeMessage> createMimeMessages(EmailTemplate template, List<T> personList, String pathToFile) {
+    public <T extends Person> List<MimeMessage> createMimeMessages(EmailTemplate template, List<T> personList, List<String> pathsToFile) {
         return personList.stream()
-                .map(person-> createMimeMessage(template,person,pathToFile))
+                .map(person -> createMimeMessage(template, person, pathsToFile))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public <T extends Person> MimeMessage createMimeMessage(EmailTemplate template, T person, String pathToFile) {
-        //TODO add message creation with files
-        return null;
-    }
-    private void fillMessageHelperWithImages(MimeMessageHelper mimeMessageHelper, Set<String> pathToImages) {
-        pathToImages.forEach((pathToImage)-> fillMessageHelperWithImage(mimeMessageHelper,pathToImage));
-    }
-    private void fillMessageHelperWithImage(MimeMessageHelper mimeMessageHelper, String pathToImage){
+    public <T extends Person> MimeMessage createMimeMessage(EmailTemplate template, T person, List<String> pathsToFile) {
+        MimeMessage mimeMessage = createMimeMessage(template, person);
         try {
-            File file = new File(pathToImage);
-            mimeMessageHelper.addInline(pathToImage,file);
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            pathsToFile.forEach(pathToFile->addAttachmentToFile(helper,pathToFile));
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+        return mimeMessage;
+    }
+    private void addAttachmentToFile(MimeMessageHelper helper, String pathToFile){
+        File file = new File(pathToFile);
+        try {
+            helper.addAttachment(file.getName(),file);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+    private void fillMessageHelperWithImages(MimeMessageHelper helper, List<ImageTemplate> imageTemplates) {
+        imageTemplates.forEach((imageTemplate) ->
+                fillMessageHelperWithImage(helper, imageTemplate.getContentId(),
+                        imageTemplate.getClassPathResource(), imageTemplate.getContentType()));
+    }
 
+    private void fillMessageHelperWithImage(MimeMessageHelper helper,
+                                            String contentId, ClassPathResource classPathResource,
+                                            String contentType) {
+        try {
+            helper.addInline(contentId, classPathResource, contentType);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 }

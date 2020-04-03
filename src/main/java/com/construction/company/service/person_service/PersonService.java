@@ -1,17 +1,15 @@
 package com.construction.company.service.person_service;
 
-import com.construction.company.model.employe.*;
+import com.construction.company.model.person.*;
 
-import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface PersonService {
-    Person addEmployee(Person employee);
-    Person updateEmployee(Person employee);
+    Person addPerson(Person person);
+    Person updatePerson(Long id, Person person);
     Person findById(Long id);
     Person removeById(Long id);
-    Person dismiss(Long id);
     List<Person> findAll();
-    List<Person> findAllBySex(Sex sex);
-    List<Person> findAllByBuildingPlot(String buildingPlot);
+    List<Person> findAllByBirthDate(LocalDate birthDate);
 }

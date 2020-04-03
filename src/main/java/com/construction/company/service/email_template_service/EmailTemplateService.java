@@ -11,4 +11,5 @@ public interface EmailTemplateService {
     EmailTemplate getEmailTemplateByReason(Reason reason);
 
 
+    List<EmailTemplate> findAll();
 }

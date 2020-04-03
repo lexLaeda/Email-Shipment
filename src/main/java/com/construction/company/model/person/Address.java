@@ -1,4 +1,4 @@
-package com.construction.company.model.employe;
+package com.construction.company.model.person;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

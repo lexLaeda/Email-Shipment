@@ -5,7 +5,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
-import javax.mail.Message;
 import javax.mail.internet.MimeMessage;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,7 +17,6 @@ public class ShipmentServiceImpl implements ShipmentService{
 
     @Override
     public List<MimeMessage> sendListOfMimeMessages(List<MimeMessage> mimeMessages) {
-
         return mimeMessages.stream()
                 .map(this::sendMimeMessage)
                 .collect(Collectors.toList());

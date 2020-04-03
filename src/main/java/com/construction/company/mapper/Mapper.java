@@ -1,4 +1,4 @@
-package com.construction.company.model.template;
+package com.construction.company.mapper;
 
 import org.thymeleaf.TemplateEngine;
 

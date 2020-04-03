@@ -3,9 +3,10 @@ package com.construction.company.model.template;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
+
 
 @Data
 @Builder
@@ -17,5 +18,5 @@ public class EmailTemplateDTO {
     private Reason reason;
     private Locale locale;
     private Map<String, Object> variables;
-    private Set<String> pathToImages;
+    private List<ImageTemplateDTO> imageTemplateDTOList;
 }
