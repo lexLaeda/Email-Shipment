@@ -33,7 +33,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public String congratulateAllIfBirthDay() {
         List<Person> persons = personService.findAllByBirthDate(LocalDate.now());
-        EmailTemplate emailTemplate = emailTemplateService.getEmailTemplateByReason(Reason.BIRTHDAY);
+        EmailTemplate emailTemplate = emailTemplateService.findByReason(Reason.BIRTHDAY);
         List<MimeMessage> mimeMessages = messageService.createMimeMessages(emailTemplate, persons);
         shipmentService.sendListOfMimeMessages(mimeMessages);
         return mimeMessages.toString();
@@ -47,7 +47,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public String sendMessageToPersons(List<Person> persons, Long id) {
-        EmailTemplate emailTemplate = emailTemplateService.getEmailTemplateById(id);
+        EmailTemplate emailTemplate = emailTemplateService.findById(id);
         List<MimeMessage> mimeMessages = messageService.createMimeMessages(emailTemplate, persons);
         shipmentService.sendListOfMimeMessages(mimeMessages);
         return mimeMessages.toString();
