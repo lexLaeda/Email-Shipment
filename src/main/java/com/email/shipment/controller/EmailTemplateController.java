@@ -27,20 +27,20 @@ public class EmailTemplateController {
     }
 
     @PostMapping("/template")
-    public EmailTemplateDTO addPerson(@RequestBody EmailTemplateDTO emailTemplateDTO) {
+    public EmailTemplateDTO addTemplate(@RequestBody EmailTemplateDTO emailTemplateDTO) {
                 service.addEmailTemplate(emailTemplateDTO);
         return emailTemplateDTO;
     }
 
     @PutMapping("/{id}")
-    public EmailTemplateDTO updatePerson(@PathVariable(name = "id") Long id,
+    public EmailTemplateDTO updateTemplate(@PathVariable(name = "id") Long id,
                                          @RequestBody EmailTemplateDTO emailTemplateDTO) {
             service.updateEmailTemplate(id, emailTemplateDTO);
         return emailTemplateDTO;
     }
 
     @DeleteMapping()
-    public void deletePerson(@PathVariable(name = "id") Long id) {
+    public void deleteTemplate(@PathVariable(name = "id") Long id) {
         service.removeById(id);
     }
 }

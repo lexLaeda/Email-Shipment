@@ -1,10 +1,12 @@
 package com.email.shipment.model.template;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class ImageTemplateDTO {
     private String contentId;
     private String resourcePath;

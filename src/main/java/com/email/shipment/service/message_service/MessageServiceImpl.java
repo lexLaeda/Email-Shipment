@@ -9,6 +9,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -35,16 +36,23 @@ public class MessageServiceImpl implements MessageService {
     public <T extends Person> MimeMessage createMimeMessage(EmailTemplate template, T person) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         try {
+            Context context = updateContext(template.getContext(),person);
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
             helper.setSubject(template.getSubject());
             helper.setTo(person.getContact().getEmail());
-            String htmlContent = htmlTemplateEngine.process(template.getPathTo(), template.getContext());
+            String htmlContent = htmlTemplateEngine.process(template.getPathTo(), context);
             helper.setText(htmlContent, true);
             fillMessageHelperWithImages(helper, template.getImageTemplates());
         } catch (MessagingException e) {
             e.printStackTrace();
         }
         return mimeMessage;
+    }
+
+    private <T extends Person> Context updateContext(Context context, T person) {
+        context.setVariable("sex",person.getSex());
+        context.setVariable("fullname", String.format("%s %s", person.getFirstName(),person.getSecondName()));
+        return context;
     }
 
     @Override

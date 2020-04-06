@@ -1,5 +1,6 @@
 package com.email.shipment.service.email_service;
 
+import com.email.shipment.mapper.EmailTemplateMapper;
 import com.email.shipment.model.person.Person;
 import com.email.shipment.model.template.EmailTemplate;
 import com.email.shipment.model.template.Reason;
@@ -30,10 +31,11 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private ShipmentServiceImpl shipmentService;
 
+    private EmailTemplateMapper mapper = new EmailTemplateMapper();
     @Override
     public String congratulateAllIfBirthDay() {
         List<Person> persons = personService.findAllByBirthDate(LocalDate.now());
-        EmailTemplate emailTemplate = emailTemplateService.findByReason(Reason.BIRTHDAY);
+        EmailTemplate emailTemplate = mapper.fromDTO(emailTemplateService.findByReason(Reason.BIRTHDAY));
         List<MimeMessage> mimeMessages = messageService.createMimeMessages(emailTemplate, persons);
         shipmentService.sendListOfMimeMessages(mimeMessages);
         return mimeMessages.toString();
@@ -47,7 +49,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public String sendMessageToPersons(List<Person> persons, Long id) {
-        EmailTemplate emailTemplate = emailTemplateService.findById(id);
+        EmailTemplate emailTemplate = mapper.fromDTO(emailTemplateService.findById(id));
         List<MimeMessage> mimeMessages = messageService.createMimeMessages(emailTemplate, persons);
         shipmentService.sendListOfMimeMessages(mimeMessages);
         return mimeMessages.toString();

@@ -1,7 +1,6 @@
 package com.email.shipment.model.template;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,6 +11,9 @@ import java.util.Map;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 @Document(collection = "email_templates")
 public class EmailTemplateDTO {
     @Id
