@@ -1,20 +1,21 @@
 package com.email.shipment.service.email_template_service;
 
 import com.email.shipment.model.template.EmailTemplate;
+import com.email.shipment.model.template.EmailTemplateDTO;
 import com.email.shipment.model.template.Reason;
 
 import java.util.List;
 
 public interface EmailTemplateService {
-    EmailTemplate findById(Long id);
-    EmailTemplate findByReason(Reason reason);
+    EmailTemplateDTO findById(Long id);
+    EmailTemplateDTO findByReason(Reason reason);
 
 
-    List<EmailTemplate> findAll();
+    List<EmailTemplateDTO> findAll();
 
-    EmailTemplate addEmailTemplate(EmailTemplate emailTemplate);
+    EmailTemplateDTO addEmailTemplate(EmailTemplateDTO emailTemplateDTO);
 
-    EmailTemplate  updateEmailTemplate(Long id, EmailTemplate emailTemplate);
+    EmailTemplateDTO updateEmailTemplate(Long id, EmailTemplateDTO emailTemplateDTO);
 
     void  removeById(Long id);
 }

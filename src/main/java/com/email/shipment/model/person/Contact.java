@@ -11,6 +11,5 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Contact {
-    private List<String> phoneNumbers;
     private String email;
 }

@@ -16,30 +16,26 @@ public class EmailTemplateController {
     @Autowired
     private EmailTemplateService service;
 
-    private EmailTemplateMapper mapper = new EmailTemplateMapper();
-
     @GetMapping("/all")
     public List<EmailTemplateDTO> findAll(){
-        return service.findAll().stream()
-                .map(emailTemplate -> mapper.toDTO(emailTemplate))
-                .collect(Collectors.toList());
+        return service.findAll();
     }
 
     @GetMapping("/{id}")
     public EmailTemplateDTO findById(@PathVariable(name = "id")Long id){
-        return mapper.toDTO(service.findById(id));
+        return service.findById(id);
     }
 
     @PostMapping("/template")
     public EmailTemplateDTO addPerson(@RequestBody EmailTemplateDTO emailTemplateDTO) {
-                service.addEmailTemplate(mapper.fromDTO(emailTemplateDTO));
+                service.addEmailTemplate(emailTemplateDTO);
         return emailTemplateDTO;
     }
 
     @PutMapping("/{id}")
     public EmailTemplateDTO updatePerson(@PathVariable(name = "id") Long id,
                                          @RequestBody EmailTemplateDTO emailTemplateDTO) {
-            service.updateEmailTemplate(id, mapper.fromDTO(emailTemplateDTO));
+            service.updateEmailTemplate(id, emailTemplateDTO);
         return emailTemplateDTO;
     }
 

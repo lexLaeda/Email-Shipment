@@ -19,12 +19,12 @@ public class EmailController {
         return emailService.congratulateAllIfBirthDay();
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/persons/{id}")
     public String sendToPersons(@RequestBody List<Person> personList, @PathVariable("id") Long templateId) {
         return emailService.sendMessageToPersons(personList,templateId);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/person/{id}")
     public String sendToPerson(@RequestBody Person person, @PathVariable("id") Long templateId){
         return emailService.sendMessageToPerson(person,templateId);
     }
