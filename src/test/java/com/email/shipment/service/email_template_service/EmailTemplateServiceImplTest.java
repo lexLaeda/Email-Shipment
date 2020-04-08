@@ -24,6 +24,7 @@ class EmailTemplateServiceImplTest {
 
     private EmailTemplateDTO birthDay;
     private ObjectMapper mapper;
+    private static final Long TESTID = 10000L;
     @BeforeEach
     void setUp() {
         mapper = new ObjectMapper();
@@ -37,7 +38,7 @@ class EmailTemplateServiceImplTest {
                 .build();
         List<ImageTemplateDTO> images = Arrays.asList(imDTO);
         birthDay = EmailTemplateDTO.builder()
-                .id(1L)
+                .id(TESTID)
                 .name("BirthDayTemplate")
                 .pathTo("html/HappyBirthDay.html")
                 .locale(Locale.ENGLISH)
@@ -50,7 +51,7 @@ class EmailTemplateServiceImplTest {
     }
     @AfterEach
     void setAfter(){
-        service.removeById(10000L);
+        service.removeById(TESTID);
     }
     @Test
     void testSerialization() throws JsonProcessingException {
@@ -61,35 +62,49 @@ class EmailTemplateServiceImplTest {
         assertEquals(birthDay.getPathTo(),emailTemplateDTO.getPathTo());
     }
     @Test
-    void findById() {
-        EmailTemplateDTO emailTemplateDTO = service.findById(1L);
+    void testFindById() {
+        EmailTemplateDTO emailTemplateDTO = service.findById(TESTID);
 
         assertEquals(birthDay.getPathTo(),emailTemplateDTO.getPathTo());
     }
 
     @Test
-    void findByReason() {
+    void testFindByReason() {
         EmailTemplateDTO emailTemplateDTO = service.findByReason(Reason.BIRTHDAY);
         assertEquals(birthDay.getPathTo(),emailTemplateDTO.getPathTo());
     }
 
     @Test
-    void findAll() {
+    void testFindAll() {
         List<EmailTemplateDTO> list = service.findAll();
         assertNotNull(list);
-        assertEquals(1,list.size());
+        assertTrue(list.size() > 0);
         assertEquals(birthDay.getPathTo(),list.get(0).getPathTo());
     }
 
     @Test
-    void addEmailTemplate() {
+    void testAddEmailTemplate() {
+        assertNotNull(service.addEmailTemplate(birthDay));
+
+        assertEquals(birthDay,service.addEmailTemplate(birthDay));
+
     }
 
     @Test
-    void updateEmailTemplate() {
+    void testUpdateEmailTemplate() {
+        service.addEmailTemplate(birthDay);
+        EmailTemplateDTO upBirthday = birthDay;
+        String updatedName = "updatedBirthDayTemplate";
+        upBirthday.setName(updatedName);
+        service.updateEmailTemplate(TESTID,upBirthday);
+        assertEquals(upBirthday.getName(),service.findById(TESTID).getName());
     }
 
     @Test
-    void removeById() {
+    void testRemoveById() {
+        List<EmailTemplateDTO> all = service.findAll();
+        service.removeById(TESTID);
+        List<EmailTemplateDTO> allAfterRemove = service.findAll();
+        assertEquals(1, all.size() - allAfterRemove.size());
     }
 }

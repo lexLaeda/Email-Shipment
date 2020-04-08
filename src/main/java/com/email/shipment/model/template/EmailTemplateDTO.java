@@ -18,11 +18,18 @@ import java.util.Map;
 public class EmailTemplateDTO {
     @Id
     private Long id;
+
     private String name;
+
     private String pathTo;
+
     private String subject;
+
     private Reason reason;
+
     private Locale locale;
+
     private Map<String, Object> variables;
+
     private List<ImageTemplateDTO> imageTemplateDTOList;
 }

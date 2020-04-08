@@ -16,13 +16,21 @@ import java.util.Locale;
 @AllArgsConstructor
 @Builder
 public class EmailTemplate implements Cloneable {
+
     private Long id;
+
     private String name;
+
     private String pathTo;
+
     private String subject;
+
     private Reason reason;
+
     private Locale locale;
+
     private Context context;
+
     private List<ImageTemplate> imageTemplates;
 
 

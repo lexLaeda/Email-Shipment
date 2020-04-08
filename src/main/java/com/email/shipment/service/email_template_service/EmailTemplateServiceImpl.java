@@ -6,11 +6,13 @@ import com.email.shipment.model.template.EmailTemplate;
 import com.email.shipment.model.template.EmailTemplateDTO;
 import com.email.shipment.model.template.Reason;
 import com.email.shipment.repository.EmailTemplateRepository;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.rmi.runtime.Log;
 
 import java.util.List;
-
+;
 
 
 @Service
@@ -19,6 +21,8 @@ public class EmailTemplateServiceImpl implements EmailTemplateService {
 
     @Autowired
     private EmailTemplateRepository repository;
+
+    private Logger logger = Logger.getLogger(EmailTemplateServiceImpl.class);
 
     @Override
     public EmailTemplateDTO findById(Long id) {
@@ -43,7 +47,9 @@ public class EmailTemplateServiceImpl implements EmailTemplateService {
 
     @Override
     public EmailTemplateDTO addEmailTemplate(EmailTemplateDTO emailTemplateDTO) {
-        return repository.save(emailTemplateDTO);
+        EmailTemplateDTO saved = repository.save(emailTemplateDTO);
+        logger.info(String.format("EmailTemplate with id %s saved", emailTemplateDTO.getId()));
+        return saved;
     }
 
     @Override
@@ -58,12 +64,14 @@ public class EmailTemplateServiceImpl implements EmailTemplateService {
         eTfromDB.setImageTemplateDTOList(emailTemplateDTO.getImageTemplateDTOList());
         eTfromDB.setSubject(emailTemplateDTO.getSubject());
         eTfromDB.setVariables(emailTemplateDTO.getVariables());
-
-        return repository.insert(eTfromDB);
+        EmailTemplateDTO updated = repository.save(eTfromDB);
+        logger.info(String.format("EmailTemplate with id %s was updated", id));
+        return updated;
     }
 
     @Override
     public void removeById(Long id) {
         repository.deleteById(id);
+        logger.info(String.format("EmailTemplate with id %s was deleted", id));
     }
 }

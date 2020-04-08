@@ -3,6 +3,7 @@ package com.email.shipment.service.person_service;
 import com.email.shipment.exception.PersonNotFoundException;
 import com.email.shipment.model.person.Person;
 import com.email.shipment.repository.PersonRepository;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +17,13 @@ public class PersonServiceImpl implements PersonService {
     @Autowired
     private PersonRepository personRepository;
 
+    private static final Logger LOG = Logger.getLogger(PersonServiceImpl.class);
+
     @Override
     public Person addPerson(Person person) {
-        return personRepository.save(person);
+        Person personInDB = personRepository.save(person);
+        LOG.info(personInDB + " added to database");
+        return personInDB;
     }
 
     @Override
@@ -33,12 +38,13 @@ public class PersonServiceImpl implements PersonService {
         personFromDB.setFirstName(person.getFirstName());
         personFromDB.setSecondName(person.getSecondName());
         personFromDB.setThirdName(person.getThirdName());
-        return personRepository.save(personFromDB);
+        Person updatedPerson =  personRepository.save(personFromDB);
+        LOG.info(personFromDB + " updated");
+        return updatedPerson;
     }
 
     @Override
     public Person findById(Long id) {
-
         return personRepository.findById(id)
                 .orElseThrow(()->new PersonNotFoundException(id.toString()));
     }
@@ -46,6 +52,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public void removeById(Long id) {
         personRepository.deleteById(id);
+        LOG.info(String.format("User with %s was deleted",id));
     }
 
     @Override

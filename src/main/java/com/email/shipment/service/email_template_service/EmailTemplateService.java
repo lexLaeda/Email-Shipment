@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface EmailTemplateService {
     EmailTemplateDTO findById(Long id);
-    EmailTemplateDTO findByReason(Reason reason);
 
+    EmailTemplateDTO findByReason(Reason reason);
 
     List<EmailTemplateDTO> findAll();
 
