@@ -2,7 +2,6 @@ package com.email.shipment.controller;
 
 import com.email.shipment.model.person.Person;
 import com.email.shipment.service.email_service.EmailService;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +15,6 @@ public class EmailController {
     @Autowired
     private EmailService emailService;
 
-    private static final Logger logger = Logger.getLogger(EmailController.class);
     @GetMapping("/birthday")
     public String congratulateWithBD() {
         return emailService.congratulateAllIfBirthDay();
